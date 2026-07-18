@@ -1,47 +1,19 @@
-# Shiwang's Universe — 3D Developer Portfolio
+# React + Vite
 
-Welcome to my interactive 3D developer portfolio! This project is a space-themed journey through my skills, projects, and experiences, built with React, Three.js, and a touch of Agentic AI inspiration.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-## 🚀 Features
+Currently, two official plugins are available:
 
-- **Immersive 3D Environment**: Navigate a beautiful space scene complete with stars, asteroids, and a dynamically lit Earth, powered by `@react-three/fiber` and `three.js`.
-- **Vim-like Terminal UI**: Click the floating `>_` button in the bottom right corner to open a translucent glassmorphic terminal. Type commands to learn more about me!
-- **Interactive Content Cards**: Discover details about my background, skills, and projects seamlessly blended into the 3D space with `Html` overlays.
-- **Responsive Design**: The universe adapts gracefully to mobile and desktop screens.
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
 
-## 💻 Terminal Commands
+## React Compiler
 
-The built-in terminal supports the following commands:
-- `whoami` - Brief overview of who I am
-- `skills` - Detailed list of my technical skills (AI, Backend, Cloud, etc.)
-- `projects` - My top projects like Micropatient and Foodingo
-- `contact` - Links to my LinkedIn, GitHub, and Email
-- `hire` - Why you should hire me
-- `resume` - Automatically opens my PDF resume in a new tab
-- `clear` - Clears the terminal screen
-- `secret` - ???
+The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
 
-## 🛠️ Tech Stack
+Note: This will impact Vite dev & build performances.
 
-- **Framework**: React + Vite
-- **3D Graphics**: Three.js, React Three Fiber, React Three Drei
-- **Styling**: Vanilla CSS (Global variables, Glassmorphism, CSS Animations)
+## Expanding the ESLint configuration
 
-## 🏃‍♂️ Running Locally
-
-1. Clone the repository
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-3. Start the development server:
-   ```bash
-   npm run dev
-   ```
-4. Build for production:
-   ```bash
-   npm run build
-   ```
-
-## 👨‍💻 About Me
-I'm **Shiwang Kumar Rai**, a Computer Science student at Oriental Institute of Science and Technology. I'm deeply passionate about backend architecture, AI pipelines, and building scalable microservices. I bridge the gap between traditional backend engineering and the future of Agentic AI.
+If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+# three.js
