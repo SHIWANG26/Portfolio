@@ -1,0 +1,5 @@
+{
+  "buildCommand": "cd three.js && npm run build",
+  "outputDirectory": "three.js/dist",
+  "installCommand": "cd three.js && npm install"
+}
