@@ -15,7 +15,8 @@ export default function CameraController({ scrollProgress = 0 }) {
       new THREE.Vector3(5, 2, -5),       // Moving away
       new THREE.Vector3(8, 1, -20),      // Toward About section
       new THREE.Vector3(5, 3, -35),      // About section
-      new THREE.Vector3(-2, 2, -50),     // Transition
+      new THREE.Vector3(0, 2, -45),      // Toward Resume
+      new THREE.Vector3(-2, 3, -55),     // Resume section
       new THREE.Vector3(-6, 1, -65),     // Toward Skills
       new THREE.Vector3(-3, 3, -80),     // Skills section
       new THREE.Vector3(2, 1, -95),      // Transition
@@ -35,8 +36,8 @@ export default function CameraController({ scrollProgress = 0 }) {
       new THREE.Vector3(3, 1, -2),
       new THREE.Vector3(6, 1, -10),
       new THREE.Vector3(8, 0, -28),      // About planet
-      new THREE.Vector3(4, 2, -40),
-      new THREE.Vector3(-4, 1, -55),
+      new THREE.Vector3(0, 1, -40),      // Transition
+      new THREE.Vector3(-4, -1, -55),    // Resume object
       new THREE.Vector3(-8, 0, -72),     // Skills station
       new THREE.Vector3(-4, 2, -85),
       new THREE.Vector3(3, 0, -100),
@@ -51,6 +52,15 @@ export default function CameraController({ scrollProgress = 0 }) {
 
   useFrame(() => {
     const t = Math.max(0, Math.min(1, scrollProgress))
+
+    // Dynamically adjust FOV for mobile responsiveness
+    const aspect = window.innerWidth / window.innerHeight
+    if (aspect < 1) {
+      camera.fov = 60 + (1 - aspect) * 30 // Increase FOV on narrow screens
+    } else {
+      camera.fov = 60
+    }
+    camera.updateProjectionMatrix()
 
     // Get position and look-at from curves
     const pos = pathCurve.getPointAt(t)

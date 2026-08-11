@@ -35,7 +35,7 @@ function LoadingScreen({ loaded }) {
 }
 
 function ScrollIndicator({ scrollProgress }) {
-  const sections = ['Home', 'About', 'Skills', 'Hobbies', 'Contact']
+  const sections = ['Home', 'About', 'Resume', 'Skills', 'Hobbies', 'UFO', 'Contact']
   const activeIndex = Math.min(
     Math.floor(scrollProgress * sections.length),
     sections.length - 1
