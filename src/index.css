@@ -409,13 +409,24 @@ body {
 
 @media (max-width: 768px) {
   .glass-card {
-    padding: 24px 24px;
-    margin: 0 16px;
-    max-width: calc(100vw - 32px);
+    padding: 40px;
+    margin: 0;
+    width: 700px;
+    max-width: none;
   }
 
   .glass-card h2 {
-    font-size: 1.4rem;
+    font-size: 3rem;
+  }
+
+  .glass-card p {
+    font-size: 1.6rem;
+    line-height: 1.6;
+  }
+
+  .glass-card .tag {
+    font-size: 1.3rem;
+    padding: 12px 24px;
   }
 
   .social-links {
@@ -608,6 +619,7 @@ body {
   box-shadow: 0 0 60px rgba(145, 94, 255, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
   background: rgba(15, 18, 45, 0.85);
   cursor: default;
+  overflow-y: auto;
 }
 
 .glass-card-content {

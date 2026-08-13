@@ -56,7 +56,10 @@ export default function CameraController({ scrollProgress = 0 }) {
     // Dynamically adjust FOV for mobile responsiveness
     const aspect = window.innerWidth / window.innerHeight
     if (aspect < 1) {
-      camera.fov = 60 + (1 - aspect) * 30 // Increase FOV on narrow screens
+      // Calculate equivalent vertical FOV to maintain horizontal field of view
+      const targetFov = 60
+      const vFov = 2 * Math.atan( Math.tan( targetFov * Math.PI / 360 ) / aspect ) * 180 / Math.PI
+      camera.fov = Math.min(vFov, 120) // Cap to avoid extreme distortion
     } else {
       camera.fov = 60
     }

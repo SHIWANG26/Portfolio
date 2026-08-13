@@ -126,10 +126,10 @@ export default function App() {
           <h2 className="outro-title">Let's Connect</h2>
           <p className="outro-subtitle">Reach out across the cosmos</p>
           <div className="social-links">
-            <a href="https://github.com/shiwangr" target="_blank" rel="noopener noreferrer" className="social-link">
+            <a href="https://github.com/SHIWANG26/" target="_blank" rel="noopener noreferrer" className="social-link">
               <GithubIcon /> GitHub
             </a>
-            <a href="https://linkedin.com/in/shiwangr" target="_blank" rel="noopener noreferrer" className="social-link">
+            <a href="https://www.linkedin.com/in/shiwang-kumar-rai" target="_blank" rel="noopener noreferrer" className="social-link">
               <LinkedInIcon /> LinkedIn
             </a>
             <a href="mailto:shiwangr@gmail.com" className="social-link">
