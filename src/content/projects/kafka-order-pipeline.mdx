@@ -1,0 +1,59 @@
+---
+title: "Event-Driven Order Pipeline with Apache Kafka"
+summary: "An event-driven microservices pipeline using Apache Kafka as the backbone — decoupling order ingestion, inventory updates, and notification dispatch into independently scalable consumers."
+publishedAt: "2025-03-01"
+role: "Backend Engineer"
+techStack: ["Java", "Spring Boot", "Apache Kafka", "PostgreSQL", "Docker Compose"]
+githubUrl: "https://github.com/SHIWANG26"
+---
+
+## Overview
+
+Synchronous request-response chains are a reliability risk in distributed systems: one slow or failing service can cascade failures upstream. This project demonstrates how to replace a synchronous order-processing chain with an event-driven pipeline, using Apache Kafka as the durable event backbone.
+
+## Problem
+
+The original architecture had the order API calling inventory and notification services synchronously:
+
+```
+Client → Order API → Inventory Service → Notification Service → Response
+```
+
+Any failure in inventory or notification blocked the entire request, and a spike in order volume overwhelmed downstream services because there was no backpressure mechanism.
+
+## Event-Driven Architecture
+
+I restructured the pipeline so the Order API only writes an event and acknowledges the client:
+
+```
+Client → Order API → Kafka Topic: orders.created
+                              ↓
+                   Inventory Consumer (updates stock)
+                              ↓
+                   Notification Consumer (sends email/push)
+```
+
+Each consumer reads at its own pace, retries independently, and can scale horizontally without touching the producer.
+
+## Kafka Topic Design
+
+```java
+@KafkaListener(topics = "orders.created", groupId = "inventory-group")
+public void handleOrderCreated(OrderCreatedEvent event) {
+    inventoryService.reserveStock(event.getProductId(), event.getQuantity());
+}
+```
+
+Key decisions:
+- **Partitioning by `userId`** — ensures ordering guarantees within a user's order history
+- **Retention policy**: 7 days — allows consumers to replay events after a bug fix
+- **Idempotency**: consumers use the `orderId` as an idempotency key, so reprocessing a duplicate event is a no-op
+
+## Failure Handling
+
+- **Dead-letter topic** (`orders.created.dlq`): Events that fail after 3 retries are routed here for manual inspection rather than being silently dropped
+- **Consumer lag monitoring**: A Prometheus metric tracks the lag per partition; an alert fires when lag exceeds 5,000 messages
+
+## Outcome
+
+The pipeline decouples order ingestion from downstream processing, giving each service independent scaling and failure boundaries. The inventory service can be redeployed with zero downtime while the queue absorbs the gap.
