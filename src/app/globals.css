@@ -1,0 +1,151 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --paper: #f6f4ee;
+  --paper-strong: #ffffff;
+  --ink: #131516;
+  --muted: #646a6d;
+  --line: #d9dcda;
+  --blueprint: #176b9f;
+  --blueprint-deep: #0b527f;
+  --blueprint-light: #5eaad8;
+}
+
+html {
+  background: var(--paper);
+  color: var(--ink);
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(circle at top right, rgba(23, 107, 159, 0.055), transparent 28rem),
+    var(--paper);
+}
+
+::selection {
+  background: rgba(23, 107, 159, 0.16);
+}
+
+@layer components {
+  .bg-paper {
+    background-color: var(--paper);
+  }
+
+  .text-ink {
+    color: var(--ink);
+  }
+
+  .text-muted {
+    color: var(--muted);
+  }
+
+  .border-line {
+    border-color: var(--line);
+  }
+
+  .text-blueprint {
+    color: var(--blueprint);
+  }
+
+  .text-blueprint-deep {
+    color: var(--blueprint-deep);
+  }
+
+  .text-blueprint-light {
+    color: var(--blueprint-light);
+  }
+
+  .bg-blueprint-deep {
+    background-color: var(--blueprint-deep);
+  }
+
+  .font-sans {
+    font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  }
+
+  .font-display {
+    font-family: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif;
+  }
+
+  .font-mono {
+    font-family: var(--font-jetbrains), ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+
+  .grid-paper {
+    background-color: var(--paper);
+    background-image:
+      linear-gradient(rgba(19, 21, 22, 0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(19, 21, 22, 0.035) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+
+  .blueprint-panel {
+    border: 1px solid var(--line);
+    background: rgba(255, 255, 255, 0.64);
+    box-shadow: 0 16px 45px rgba(19, 21, 22, 0.04);
+  }
+
+  .project-card {
+    display: flex;
+    min-height: 19rem;
+    flex-direction: column;
+    border: 1px solid var(--line);
+    background: rgba(255, 255, 255, 0.72);
+    padding: 1.5rem;
+    transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+  }
+
+  .project-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--blueprint);
+    box-shadow: 0 20px 40px rgba(19, 21, 22, 0.07);
+  }
+
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid var(--line);
+    background: rgba(246, 244, 238, 0.8);
+    padding: 0.3rem 0.55rem;
+    font-family: var(--font-jetbrains), ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.67rem;
+    line-height: 1;
+    color: var(--muted);
+  }
+
+  .eyebrow {
+    font-family: var(--font-jetbrains), ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.68rem;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--blueprint-deep);
+  }
+
+  .status-dot {
+    width: 0.44rem;
+    height: 0.44rem;
+    border-radius: 999px;
+    background: var(--blueprint);
+    box-shadow: 0 0 0 4px rgba(23, 107, 159, 0.08);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

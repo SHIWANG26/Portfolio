@@ -1,0 +1,34 @@
+---
+title: "Understanding Distributed Tracing"
+summary: "Why logs aren't enough when your microservices start talking to each other, and how distributed tracing connects the dots."
+publishedAt: "2025-08-15"
+readingTime: "4 min read"
+tags: ["Microservices", "Observability", "Backend"]
+---
+
+## The limits of structured logging
+
+When you move from a monolith to microservices, traditional logging breaks down. You might have perfectly structured JSON logs in Service A and Service B, but when a user request hits A, which then calls B via gRPC, it's incredibly difficult to stitch those isolated log entries together to answer a simple question: *Why was this request slow?*
+
+This is the problem distributed tracing solves.
+
+## Trace IDs and Span IDs
+
+At the core of distributed tracing are two concepts:
+
+1.  **Trace ID**: A globally unique identifier attached to the initial request (e.g., from an API Gateway). This ID is passed along in the headers of every subsequent downstream network call.
+2.  **Span ID**: A unique identifier for a specific unit of work (e.g., a database query, an HTTP call) within that trace.
+
+When Service A calls Service B, it injects the Trace ID and its own Span ID (as the `parent_id`) into the request headers.
+
+## Context Propagation
+
+The hardest part of tracing isn't generating the IDs; it's propagating them.
+
+In Java/Spring, this traditionally meant using `ThreadLocal` storage so you didn't have to pass a `Context` object through every method signature. When making a downstream call (e.g., via `RestTemplate` or gRPC), an interceptor reads the `ThreadLocal` state and injects it into the outgoing HTTP headers.
+
+However, in reactive or asynchronous programming (like WebFlux or CompletableFuture chains), thread-locals break because the work jumps across threads. Frameworks like Micrometer Tracing (formerly Spring Cloud Sleuth) or OpenTelemetry handle this by carefully propagating context across thread boundaries.
+
+## The Payoff
+
+Once your traces are collected by a backend like Jaeger, Zipkin, or Datadog, you get a visual flame graph. Instead of guessing which service caused a timeout, you can see exactly where the time was spent, right down to the specific slow SQL query at the bottom of the call stack.

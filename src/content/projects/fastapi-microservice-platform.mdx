@@ -1,0 +1,67 @@
+---
+title: "FastAPI Microservice Platform"
+summary: "A production-ready backend platform built with FastAPI, featuring 12+ REST endpoints, Pydantic validation, PostgreSQL query optimization, and automated CI/CD — reducing release turnaround from 2 days to under 4 hours."
+publishedAt: "2025-09-01"
+role: "Software Engineering Intern"
+techStack: ["FastAPI", "Python", "PostgreSQL", "MongoDB", "Docker", "CI/CD"]
+githubUrl: "https://github.com/SHIWANG26"
+---
+
+## Overview
+
+During my internship at Predulive Labs, I owned the backend API layer for the core product platform. The challenge was to replace fragile, hand-rolled endpoint logic with a consistent, well-typed, and observable API surface that could be maintained by multiple developers.
+
+## Problem
+
+The existing backend lacked:
+- Consistent request/response schemas — different endpoints returned data in different shapes
+- Observability — no structured logging, no error classification
+- Reliable deployment — manual SSH deploys with no rollback story
+
+## Architecture
+
+I chose **FastAPI** as the framework for its native async support, automatic OpenAPI documentation, and first-class Pydantic integration. Each endpoint is modelled as a typed Pydantic schema, which enforces validation at the boundary rather than deep inside business logic.
+
+```python
+class ProjectCreateRequest(BaseModel):
+    title: str = Field(..., min_length=1, max_length=200)
+    description: str | None = None
+    tags: list[str] = Field(default_factory=list)
+
+@router.post("/projects", response_model=ProjectResponse, status_code=201)
+async def create_project(body: ProjectCreateRequest, db: AsyncSession = Depends(get_db)):
+    ...
+```
+
+## Database Optimization
+
+The application used both **PostgreSQL** (relational data) and **MongoDB** (document store for unstructured content). I profiled slow queries with `EXPLAIN ANALYZE` and added:
+- Covering indexes on high-frequency read paths
+- Pagination using keyset pagination instead of `OFFSET` to avoid full scans at large offsets
+- Connection pooling via `asyncpg` to reduce per-request latency
+
+This improved average API response time by **30%** across core data retrieval pipelines.
+
+## CI/CD Pipeline
+
+I introduced a GitHub Actions workflow that runs lint, type-check, and tests on every pull request, and deploys to staging automatically on merge to `main`. The pipeline reduced release turnaround from 2 days to under 4 hours.
+
+```yaml
+on:
+  push:
+    branches: [main]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build and push Docker image
+        run: docker build -t app . && docker push registry/app
+```
+
+## Results
+
+- 12+ endpoints delivered with consistent Pydantic-validated schemas
+- 40% reduction in integration overhead reported by the frontend team
+- 30% improvement in average response time on core read paths
+- Release cycle shortened from 2 days to under 4 hours

@@ -1,0 +1,73 @@
+---
+title: "Distributed Auth Service with gRPC"
+summary: "A stateless, role-based authentication and authorization service built with Java and Spring Security over gRPC — designed for low-latency token validation at scale across multiple microservices."
+publishedAt: "2025-06-01"
+role: "Backend Engineer"
+techStack: ["Java", "Spring Boot", "Spring Security", "gRPC", "PostgreSQL", "Docker"]
+githubUrl: "https://github.com/SHIWANG26"
+---
+
+## Overview
+
+Most monolithic authentication setups become a bottleneck when split across microservices — every service that needs to validate a token must either replicate the auth logic or call back to a central HTTP endpoint. This project explores a cleaner architecture using **gRPC** for binary-efficient, schema-first token validation RPC calls.
+
+## Problem
+
+In a microservices environment, token validation is on the hot path of every authenticated request. REST-based auth endpoints add:
+- HTTP overhead (text headers, JSON parsing) for each call
+- Coupling between service contracts and HTTP method semantics
+- No strong interface contracts — any change can break consumers silently
+
+## Design
+
+I defined the auth service interface using **Protocol Buffers**:
+
+```protobuf
+service AuthService {
+  rpc ValidateToken(TokenRequest) returns (TokenResponse);
+  rpc AssignRole(RoleAssignment) returns (RoleResponse);
+}
+
+message TokenRequest {
+  string token = 1;
+  string required_permission = 2;
+}
+
+message TokenResponse {
+  bool valid = 1;
+  string subject = 2;
+  repeated string roles = 3;
+}
+```
+
+This gives consuming services a generated, typed client — breaking changes are caught at compile time, not at runtime.
+
+## Spring Security Integration
+
+The service uses **Spring Security** for the authorization model. Roles are stored in PostgreSQL and cached in-process with a short TTL to avoid a database round-trip on every RPC call.
+
+```java
+@GrpcService
+public class AuthGrpcService extends AuthServiceGrpc.AuthServiceImplBase {
+    @Override
+    public void validateToken(TokenRequest request, StreamObserver<TokenResponse> observer) {
+        var result = tokenValidator.validate(request.getToken(), request.getRequiredPermission());
+        observer.onNext(TokenResponse.newBuilder()
+            .setValid(result.isValid())
+            .setSubject(result.getSubject())
+            .addAllRoles(result.getRoles())
+            .build());
+        observer.onCompleted();
+    }
+}
+```
+
+## Trade-offs Considered
+
+- **gRPC vs REST**: gRPC wins on throughput for internal service-to-service calls; REST is better for public APIs consumed by browsers.
+- **Stateless JWT vs stateful sessions**: Stateless JWTs avoid database lookups per request but make revocation harder. I added a short-lived token blocklist in Redis for logout flows.
+- **Cache TTL**: Longer TTL reduces DB load but increases the window where revoked roles are still served. I settled on 30 seconds as a reasonable balance.
+
+## Outcome
+
+The service handles token validation with sub-millisecond RPC latency on the happy path and provides a strongly-typed contract that makes consumer onboarding significantly easier than HTTP-based alternatives.
